@@ -29,4 +29,12 @@
             name="RentalService"
             implementation="org.example.controller.api.RentalController"
             url-pattern="/rentals"/>
+    <endpoint
+            name="StaffService"
+            implementation="org.example.controller.api.StafController"
+            url-pattern="/staffs"/>
+    <endpoint
+            name="StaffService"
+            implementation="org.example.controller.api.StoreController"
+            url-pattern="/stores"/>
 </endpoints>
