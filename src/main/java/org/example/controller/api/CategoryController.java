@@ -4,6 +4,7 @@ import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
 import jakarta.jws.WebResult;
 import jakarta.jws.WebService;
+import jakarta.jws.soap.SOAPBinding;
 import jakarta.xml.ws.WebServiceException;
 import org.example.controller.response.ResponseMessage;
 import org.example.dto.CategoryDto;
@@ -14,6 +15,7 @@ import org.example.service.category.CategoryServiceImpl;
 
 import java.util.List;
 
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @WebService(name = "CategoryService")
 public class CategoryController {
 

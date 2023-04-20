@@ -4,6 +4,7 @@ import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
 import jakarta.jws.WebResult;
 import jakarta.jws.WebService;
+import jakarta.jws.soap.SOAPBinding;
 import jakarta.xml.ws.WebServiceException;
 import org.example.controller.response.ResponseMessage;
 import org.example.dto.CountryDto;
@@ -13,6 +14,7 @@ import org.example.service.country.CountryService;
 
 import java.util.List;
 import java.util.Optional;
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 
 @WebService(name = "CountryService")
 public class CountryController {
