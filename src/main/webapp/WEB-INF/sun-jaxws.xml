@@ -25,4 +25,8 @@
             name="CategoryService"
             implementation="org.example.controller.api.CategoryController"
             url-pattern="/categories"/>
+    <endpoint
+            name="RentalService"
+            implementation="org.example.controller.api.RentalController"
+            url-pattern="/rentals"/>
 </endpoints>
