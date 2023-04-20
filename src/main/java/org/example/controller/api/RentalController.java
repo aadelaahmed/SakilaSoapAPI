@@ -4,6 +4,7 @@ import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
 import jakarta.jws.WebResult;
 import jakarta.jws.WebService;
+import jakarta.jws.soap.SOAPBinding;
 import org.example.controller.request.FilmRentalRequest;
 import org.example.dto.rental.RentalSummaryDto;
 import org.example.mapper.rental.RentalMapper;
@@ -12,6 +13,7 @@ import org.example.service.rental.RentalServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
+@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 
 @WebService(name = "RentalService")
 public class RentalController {
