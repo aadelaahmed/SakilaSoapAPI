@@ -1,0 +1,31 @@
+<web-app xmlns= "https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation= "https://jakarta.ee/xml/ns/jakartaee
+ https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version= "5.0"
+         metadata-complete= "true">
+    <listener>
+        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>WebService</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>WebService</servlet-name>
+        <url-pattern>/ws</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>WebService</servlet-name>
+        <url-pattern>/actors</url-pattern>
+        <url-pattern>/countries</url-pattern>
+        <url-pattern>/films</url-pattern>
+        <url-pattern>/customers</url-pattern>
+        <url-pattern>/cities</url-pattern>
+        <url-pattern>/categories</url-pattern>
+    </servlet-mapping>
+</web-app>

@@ -1,0 +1,28 @@
+<endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
+    <endpoint
+            name="ActorService"
+            implementation="org.example.controller.api.ActorController"
+            url-pattern="/actors"/>
+
+    <endpoint
+            name="FilmService"
+            implementation="org.example.controller.api.FilmController"
+            url-pattern="/films"/>
+
+    <endpoint
+            name="CountryService"
+            implementation="org.example.controller.api.CountryController"
+            url-pattern="/countries"/>
+    <endpoint
+            name="CustomerService"
+            implementation="org.example.controller.api.CustomerController"
+            url-pattern="/customers"/>
+    <endpoint
+            name="CityService"
+            implementation="org.example.controller.api.CityController"
+            url-pattern="/cities"/>
+    <endpoint
+            name="CategoryService"
+            implementation="org.example.controller.api.CategoryController"
+            url-pattern="/categories"/>
+</endpoints>
