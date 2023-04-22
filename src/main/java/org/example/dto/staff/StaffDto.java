@@ -38,4 +38,6 @@ public class StaffDto implements Serializable {
     private String password;
     @NotNull
     private Integer storeId;
+    @NotNull
+    private Instant lastUpdate;
 }

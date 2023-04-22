@@ -1,5 +1,6 @@
 package org.example.service.film;
 
+import jakarta.xml.ws.WebServiceException;
 import org.example.dto.FilmDto;
 import org.example.mapper.BaseMapper;
 import org.example.mapper.FilmMapper;
@@ -48,7 +49,7 @@ public class FilmServiceImpl extends BaseService<Film,FilmDto> {
     public List<FilmDto> getFilmsByActor(Integer actorId) {
         Optional<Actor> optionalActor = actorRepository.getById(actorId);
         if (!optionalActor.isPresent())
-            throw new EntityNotFoundException("There is no actor with id: " + actorId);
+            throw new WebServiceException("There is no actor with id: " + actorId);
         else {
             List<Film> films = filmRepository.findFilmsByActorId(actorId);
             return filmMapper.toDto(films);
@@ -58,7 +59,7 @@ public class FilmServiceImpl extends BaseService<Film,FilmDto> {
     public List<FilmDto> getFilmsByCategoryId(Integer categoryId) {
         Optional<Category> optionalCategory = categoryRepository.getById(categoryId);
         if (!optionalCategory.isPresent())
-            throw new EntityNotFoundException("There is no category with id: " + categoryId);
+            throw new WebServiceException("There is no category with id: " + categoryId);
         else {
             List<Film> films = filmRepository.findFilmsByCategoryId(categoryId);
             return filmMapper.toDto(films);

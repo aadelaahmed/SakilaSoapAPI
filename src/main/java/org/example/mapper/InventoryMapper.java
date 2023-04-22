@@ -12,4 +12,5 @@ import org.mapstruct.ReportingPolicy;
         componentModel = MappingConstants.ComponentModel.CDI)
 
 public interface InventoryMapper extends BaseMapper<InventoryDto, Inventory> {
+
 }

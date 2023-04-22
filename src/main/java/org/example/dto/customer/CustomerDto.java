@@ -24,7 +24,7 @@ import java.util.Set;
 public class CustomerDto implements Serializable {
     private Integer id;
     @NotNull
-    private StoreDto store;
+    private Integer storeId;
     @Size(max = 45)
     @NotNull
     private String firstName;

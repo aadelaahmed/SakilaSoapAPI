@@ -19,7 +19,7 @@ import java.time.Instant;
 public class StoreDto implements Serializable {
     private Integer id;
     @NotNull
-    private StaffDto managerStaff;
+    private Integer managerStaffId;
     @NotNull
     private AddressDto address;
     @NotNull

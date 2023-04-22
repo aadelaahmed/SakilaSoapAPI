@@ -5,6 +5,7 @@ import jakarta.jws.WebParam;
 import jakarta.jws.WebResult;
 import jakarta.jws.WebService;
 import jakarta.jws.soap.SOAPBinding;
+import jakarta.ws.rs.core.Response;
 import jakarta.xml.ws.WebServiceException;
 import org.example.controller.response.ResponseMessage;
 import org.example.dto.CategoryDto;
@@ -13,7 +14,9 @@ import org.example.repository.CategoryRepository;
 import org.example.service.category.CategoryService;
 import org.example.service.category.CategoryServiceImpl;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @WebService(name = "CategoryService")
@@ -42,22 +45,25 @@ public class CategoryController {
     @WebMethod(operationName = "createCategory")
     @WebResult(name = "categoryAdded")
     public CategoryDto createCategory(@WebParam(name = "category") CategoryDto categoryDto) {
-        CategoryDto createdCategoryDto = categoryService.create(categoryDto, categoryDto.getId());
-        if (createdCategoryDto != null) {
-            return createdCategoryDto;
+        categoryDto.setId(null);
+        categoryDto.setLastUpdate(Instant.now());
+        Optional<CategoryDto> optionalCategoryDto = Optional.ofNullable(categoryService.createByName(categoryDto,"name",categoryDto.getName()));
+        if (optionalCategoryDto.isPresent()){
+            return optionalCategoryDto.get();
         }
         throw new WebServiceException("Can't create category");
     }
 
     @WebMethod(operationName = "updateCategory")
     @WebResult(name = "categoryUpdated")
-    public ResponseMessage updateCategory(@WebParam(name = "id") Integer id, @WebParam(name = "category") CategoryDto categoryDto) {
-        boolean res = categoryService.update(id, categoryDto);
-        if (res) {
-            return new ResponseMessage("Category was updated successfully");
-        } else {
+    public CategoryDto updateCategory(@WebParam(name = "id") Integer id, @WebParam(name = "category") CategoryDto categoryDto) {
+        categoryDto.setLastUpdate(Instant.now());
+        categoryDto.setId(null);
+        CategoryDto res = categoryService.update(id,categoryDto);
+        if (res!=null) {
+            return res;
+        }else
             throw new WebServiceException("Failed to update category");
-        }
     }
 
     @WebMethod(operationName = "deleteCategoryById")

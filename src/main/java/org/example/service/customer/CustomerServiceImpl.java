@@ -4,6 +4,7 @@ import org.example.dto.rental.RentalDto;
 import org.example.dto.customer.CustomerDto;
 import org.example.dto.PaymentDto;
 import org.example.dto.customer.CustomerSummaryDto;
+import org.example.dto.rental.RentalSummaryDto;
 import org.example.mapper.customer.CustomerMapper;
 import org.example.mapper.PaymentMapper;
 import org.example.model.Customer;
@@ -38,11 +39,15 @@ public class CustomerServiceImpl extends BaseService<Customer, CustomerDto> {
         return summaries;
     }
 
-    public List<RentalDto> getRentalsByCustomerId(Integer categoryId) {
-        List<RentalDto> rentals = customerRepository.getRentalsByCustomerId(categoryId);
+    public List<RentalSummaryDto> getRentalsByCustomerId(Integer categoryId) {
+        List<RentalSummaryDto> rentals = customerRepository.getRentalsByCustomerId(categoryId);
         return rentals;
 //        Customer customer = customerRepository.getById(id).orElse(null);
         //return customer != null ? rentalRepository.findAllByCustomer(customer).stream().map(RentalDto::fromEntity).collect(Collectors.toList()) : null;
+    }
+
+    public CustomerSummaryDto getCustomerSummariesById(Integer customerId) {
+        return customerRepository.getCustomerSummariesById(customerId);
     }
 
     /*public List<PaymentDto> getPaymentsByCustomerId(Integer categoryId) {
@@ -78,7 +83,7 @@ public class CustomerServiceImpl extends BaseService<Customer, CustomerDto> {
     public CustomerDto getCustomerById(Integer id) {
         Optional<Customer> optionalCustomer = customerRepository.getById(id);
         if (!optionalCustomer.isPresent())
-            throw new EntityNotFoundException("Can't fetch customer with id: " + id);
+            throw new WebServiceException("Can't fetch customer with id: " + id);
         else {
             System.out.println("get the customer object successfully in customer service -> " + optionalCustomer.get());
             return customerMapper.toDto(optionalCustomer.get());
@@ -89,7 +94,7 @@ public class CustomerServiceImpl extends BaseService<Customer, CustomerDto> {
     public CustomerDto updateCustomer(Integer id, CustomerDto customerDto) {
         Optional<Customer> optionalCustomer = customerRepository.getById(id);
         if (!optionalCustomer.isPresent())
-            throw new EntityNotFoundException("Can't get the cutomer with id: " + id);
+            throw new WebServiceException("Can't get the cutomer with id: " + id);
         else {
             Customer customer = customerMapper.toEntity(customerDto);
             customer.setId(id);

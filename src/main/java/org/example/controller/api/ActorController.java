@@ -1,5 +1,8 @@
 package org.example.controller.api;
 
+import jakarta.ws.rs.core.Response;
+import org.example.mapper.ActorMapper;
+import org.example.repository.ActorRepository;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
 import jakarta.jws.WebResult;
@@ -13,6 +16,7 @@ import org.example.dto.ActorDto;
 import org.example.repository.ActorRepository;
 
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +44,7 @@ public class ActorController {
 
     @WebMethod(operationName = "getActorById")
     @WebResult(name = "actorById")
-    public ActorDto getActorBy(@WebParam(name = "id") Integer id) {
+    public ActorDto getActorById(@WebParam(name = "id") Integer id) {
         try {
             Optional<ActorDto> optionalActorDto = Optional.ofNullable(service.getById(id));
             if (optionalActorDto.isPresent()) {
@@ -70,10 +74,12 @@ public class ActorController {
     public ActorDto updateActor(@WebParam(name = "id") Integer id, @WebParam(name = "actorDto") ActorDto actorDto) {
         try {
             actorDto.setId(id);
-            boolean res = service.update(id, actorDto);
-            if (res) {
-                return actorDto;
-            } else {
+            actorDto.setLastUpdate(Instant.now());
+            ActorDto res = service.update(id,actorDto);
+            if (res != null) {
+                return res;
+            }
+            else {
                 throw new WebServiceException("Failed to update actor");
             }
         } catch (Exception e) {

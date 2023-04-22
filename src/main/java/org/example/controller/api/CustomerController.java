@@ -5,16 +5,20 @@ import jakarta.jws.WebParam;
 import jakarta.jws.WebResult;
 import jakarta.jws.WebService;
 import jakarta.jws.soap.SOAPBinding;
+import jakarta.ws.rs.core.Response;
 import jakarta.xml.ws.WebServiceException;
 import org.example.controller.response.ResponseMessage;
 import org.example.dto.PaymentDto;
 import org.example.dto.customer.CustomerDto;
 import org.example.dto.customer.CustomerSummaryDto;
 import org.example.dto.rental.RentalDto;
+import org.example.dto.rental.RentalSummaryDto;
 import org.example.mapper.customer.CustomerMapper;
 import org.example.repository.CustomerRepository;
+import org.example.service.customer.CustomerService;
 import org.example.service.customer.CustomerServiceImpl;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +27,7 @@ import java.util.Optional;
 @WebService(name = "CustomerService")
 public class CustomerController {
 
-    private final CustomerServiceImpl customerService = new CustomerServiceImpl(
+    private final CustomerService customerService = new CustomerService(
             new CustomerRepository(),
             CustomerMapper.INSTANCE
     );
@@ -36,40 +40,41 @@ public class CustomerController {
 
     @WebMethod(operationName = "getRentalsByCustomerId")
     @WebResult(name = "rentals")
-    public List<RentalDto> getRentalsByCustomerId(@WebParam(name = "customerId") Integer customerId) {
+    public List<RentalSummaryDto> getRentalsByCustomerId(@WebParam(name = "customerId") Integer customerId) {
         return customerService.getRentalsByCustomerId(customerId);
     }
 
     @WebMethod(operationName = "getCustomerById")
     @WebResult(name = "customer")
-    public CustomerDto getCustomerById(@WebParam(name = "id") int id) {
-        CustomerDto customerDto = customerService.getById(id);
-        if (customerDto == null) {
-            throw new WebServiceException("Customer with id " + id + " not found");
+    public CustomerSummaryDto getCustomerById(@WebParam(name = "id") int id) {
+        CustomerSummaryDto customerSummaryDto = customerService.getCustomerSummariesById(id);
+        if (customerSummaryDto != null) {
+            return customerSummaryDto;
         }
-        return customerDto;
+        throw new WebServiceException("Customer with id " + id + " not found");
     }
 
     @WebMethod(operationName = "createCustomer")
     @WebResult(name = "customerAdded")
     public CustomerDto createCustomer(@WebParam(name = "customer") CustomerDto customerDto) {
-        Optional<CustomerDto> optionalCustomerDto = Optional.ofNullable(customerService.create(customerDto, customerDto.getId()));
-        if (optionalCustomerDto.isPresent()) {
-            return optionalCustomerDto.get();
+        customerDto.setLastUpdate(Instant.now());
+        customerDto.setCreateDate(Instant.now());
+        Optional<CustomerSummaryDto> optionalCustomerSummaryDto = Optional.ofNullable(customerService.createCustomerByEmail(customerDto));
+        if (optionalCustomerSummaryDto.isPresent()){
+            optionalCustomerSummaryDto.get();
         }
         throw new WebServiceException("Can't create customer");
     }
 
     @WebMethod(operationName = "updateCustomer")
     @WebResult(name = "customerUpdated")
-    public ResponseMessage updateCustomer(@WebParam(name = "id") Integer id, @WebParam(name = "customer") CustomerDto customerDto) {
+    public CustomerDto updateCustomer(@WebParam(name = "id") Integer id, @WebParam(name = "customer") CustomerDto customerDto) {
         customerDto.setId(id);
-        boolean res = customerService.update(id, customerDto);
-        if (res) {
-            return new ResponseMessage("Customer was updated successfully");
-        } else {
+        CustomerDto res = customerService.update(id, customerDto);
+        if (res != null) {
+            return res;
+        } else
             throw new WebServiceException("Failed to update customer");
-        }
     }
 
     @WebMethod(operationName = "deleteCustomerById")

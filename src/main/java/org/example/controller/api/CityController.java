@@ -5,12 +5,14 @@ import jakarta.jws.WebParam;
 import jakarta.jws.WebResult;
 import jakarta.jws.WebService;
 import jakarta.jws.soap.SOAPBinding;
+import jakarta.ws.rs.core.Response;
 import jakarta.xml.ws.WebServiceException;
 import org.example.dto.city.CityDto;
 import org.example.mapper.city.CityMapper;
 import org.example.repository.CityRepository;
 import org.example.service.CityService;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,14 +55,14 @@ public class CityController {
 
     @WebMethod(operationName = "updateCity")
     @WebResult(name = "cityUpdated")
-    public String updateCity(@WebParam(name = "id") Integer id, @WebParam(name = "city") CityDto cityDto) {
+    public CityDto updateCity(@WebParam(name = "id") Integer id, @WebParam(name = "city") CityDto cityDto) {
         cityDto.setId(id);
-        boolean res = cityService.update(id, cityDto);
-        if (res) {
-            return "City was updated successfully";
-        } else {
-            throw new WebServiceException("Failed to update city");
+        cityDto.setLastUpdate(Instant.now());
+        CityDto res = cityService.update(id,cityDto);
+        if (res != null) {
+            return res;
         }
+        throw new WebServiceException("Failed to update city");
     }
 
     @WebMethod(operationName = "deleteCityById")

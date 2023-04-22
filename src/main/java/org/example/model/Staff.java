@@ -17,6 +17,7 @@ import java.util.Set;
 @Table(name = "staff")
 public class Staff implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "staff_id", columnDefinition = "TINYINT UNSIGNED not null")
     private Short id;
 
@@ -72,5 +73,4 @@ public class Staff implements Serializable {
 
     @OneToMany(mappedBy = "staff")
     private Set<Rental> rentals = new LinkedHashSet<>();
-
 }

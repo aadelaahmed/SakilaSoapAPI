@@ -15,7 +15,7 @@ https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
             <property name="hibernate.connection.maxPoolSize" value="20"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/sakila"/>
             <property name="jakarta.persistence.jdbc.user" value="sakila"/>
-            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.password" value="123"/>
             <!--<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>-->
         </properties>

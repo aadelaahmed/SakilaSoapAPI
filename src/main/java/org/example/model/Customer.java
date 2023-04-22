@@ -56,10 +56,10 @@ public class Customer implements Serializable {
     @Column(name = "last_update")
     private Instant lastUpdate;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.REMOVE)
     private Set<Payment> payments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.REMOVE)
     private Set<Rental> rentals = new LinkedHashSet<>();
 
 }

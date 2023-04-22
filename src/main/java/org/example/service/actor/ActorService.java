@@ -1,13 +1,29 @@
 package org.example.service.actor;
 
 import org.example.dto.ActorDto;
+import org.example.mapper.ActorMapper;
+import org.example.model.Actor;
+import org.example.repository.ActorRepository;
+import org.example.service.BaseService;
 
-import java.util.List;
+public class ActorService extends BaseService<Actor,ActorDto> {
+    ActorRepository actorRepository;
+    ActorMapper actorMapper;
+    public ActorService(ActorRepository actorRepository, ActorMapper actorMapper) {
+        super(actorRepository, actorMapper);
+        this.actorRepository = actorRepository;
+        this.actorMapper = actorMapper;
+    }
 
-public interface ActorService {
-        List<ActorDto> getAllActors();
-        ActorDto getActorById(Integer id);
-        ActorDto createActor(ActorDto actor);
-        void deleteActor(Integer id);
-        ActorDto updateActor(Integer id, ActorDto actorDetails);
+
+    @Override
+    protected Class<Actor> getEntityClass() {
+        return Actor.class;
+    }
+
+    @Override
+    protected Class<ActorDto> getDtoClass() {
+        return ActorDto.class;
+    }
+
 }

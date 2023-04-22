@@ -1,4 +1,4 @@
-package com.example.sakilaapi.controller.api;
+package org.example.controller.api;
 
 
 import jakarta.jws.WebMethod;
@@ -42,8 +42,8 @@ public class StoreController {
 
     @WebMethod(operationName = "createStore")
     @WebResult(name = "storeAdded")
-    public StoreDto createStore(@WebParam(name = "store") StoreDto storeDto) {
-        Optional<StoreDto> optionalStoreDto = Optional.ofNullable(service.create(storeDto, storeDto.getId()));
+    public StoreDto createStore(@WebParam(name = "store") StoreSummaryDto storeSummaryDto) {
+        Optional<StoreDto> optionalStoreDto = Optional.ofNullable(service.createStore(storeSummaryDto));
         if (optionalStoreDto.isPresent()) {
             return optionalStoreDto.get();
         } else {

@@ -1,4 +1,4 @@
-package org.example.service;
+package org.example.service.staff;
 
 import org.example.dto.staff.StaffDto;
 import org.example.dto.staff.StaffSummaryDto;
@@ -12,6 +12,7 @@ import org.example.model.Store;
 import org.example.repository.BaseRepository;
 import org.example.repository.StaffRepository;
 import org.example.repository.StoreRepository;
+import org.example.service.BaseService;
 
 import java.util.List;
 
@@ -34,13 +35,14 @@ public class StaffService extends BaseService<Staff, StaffDto> {
         return StaffDto.class;
     }
 
-    public StaffSummaryDto createStaffByEmail(StaffDto staffDto) {
-        return staffRepository.createStaffByEmail(staffDto);
-    }
+
     public StaffSummaryDto getStoreSummaryById(Integer id){
         return staffRepository.getStoreSummaryById(id);
     }
     public List<StaffSummaryDto> getStaffSummaries() {
         return staffRepository.getStaffSummaries();
+    }
+    public StaffSummaryDto createStaffByEmail(StaffDto staffDto) {
+        return staffRepository.createStaffByEmail(staffDto);
     }
 }

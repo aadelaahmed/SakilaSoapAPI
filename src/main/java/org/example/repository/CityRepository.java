@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import jakarta.xml.ws.WebServiceException;
 import org.example.dto.city.CityDto;
 import org.example.mapper.city.CityMapper;
 import org.example.model.City;
@@ -25,7 +26,7 @@ public class CityRepository extends BaseRepository<City,Integer>{
                 entityManager -> {
                     City city = entityManager.find(City.class,id);
                     if (city == null)
-                        throw new EntityNotFoundException("Can't find city with id: "+id);
+                        throw new WebServiceException("Can't find city with id: "+id);
                     return cityMapper.toDto(city);
                 }
         );

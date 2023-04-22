@@ -28,5 +28,6 @@
         <url-pattern>/cities</url-pattern>
         <url-pattern>/categories</url-pattern>
         <url-pattern>/rentals</url-pattern>
+        <url-pattern>/staff</url-pattern>
     </servlet-mapping>
 </web-app>

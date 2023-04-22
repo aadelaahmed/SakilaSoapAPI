@@ -75,7 +75,7 @@ public abstract class BaseRepository<E extends Serializable,ID> {
                        return mapper.toDto(entityManager.merge(entity));
 //                        return mapper.toDto(repository.update(entity));
                    } else {
-                       throw new EntityNotFoundException("Can't get "+getEntityClass().getSimpleName()+" with id: " + id);
+                       throw new WebServiceException("Can't get "+getEntityClass().getSimpleName()+" with id: " + id);
                    }
                }
        );
@@ -86,12 +86,11 @@ public abstract class BaseRepository<E extends Serializable,ID> {
     public void delete(E entity) {
         Database.doInTransactionWithoutResult(em -> em.remove(entity));
     }
-    public boolean deleteById(ID id) {
-        return Database.doInTransaction(em -> {
+    public void deleteById(ID id) {
+        Database.doInTransactionWithoutResult(em -> {
             E entity = em.find(entityType, id);
             if (entity != null) {
                 em.remove(entity);
-                return true;
             }else
                 throw new WebServiceException("There is no "+entityType.getSimpleName()+" with this id");
         });
@@ -109,7 +108,7 @@ public abstract class BaseRepository<E extends Serializable,ID> {
                         //return baseMapper.toDto(entityManager.merge(entity));
 //                        return mapper.toDto(repository.update(entity));
                     } else {
-                        throw new EntityNotFoundException("Can't get "+entityType.getSimpleName()+" with id: " + id);
+                        throw new WebServiceException("Can't get "+entityType.getSimpleName()+" with id: " + id);
                     }
                 }
         );

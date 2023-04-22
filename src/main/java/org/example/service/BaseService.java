@@ -1,6 +1,7 @@
 package org.example.service;
 
 import jakarta.xml.ws.WebServiceException;
+import org.example.exception.EntityAlreadyExistException;
 import org.example.mapper.BaseMapper;
 import org.example.repository.BaseRepository;
 import org.example.util.Database;
@@ -46,7 +47,7 @@ public abstract class BaseService<E extends Serializable, D> {
         if (id != null && dto != null) {
             Optional<E> optionalEntity = repository.getById(id);
             if (optionalEntity.isPresent()) {
-                throw new WebServiceException(getEntityClass().getSimpleName() + " is already existed");
+                throw new EntityAlreadyExistException(getEntityClass().getSimpleName() + " is already existed");
             }
         }else
             throw new WebServiceException("Can't create this "+getEntityClass().getSimpleName());
@@ -59,7 +60,7 @@ public abstract class BaseService<E extends Serializable, D> {
         if (name != null && dto != null) {
             Optional<E> optionalEntity = repository.getByName(attributeName,name);
             if (optionalEntity.isPresent()) {
-                throw new WebServiceException(getEntityClass().getSimpleName() + " is already existed");
+                throw new EntityAlreadyExistException(getEntityClass().getSimpleName() + " is already existed");
             }
         }else
             throw new WebServiceException("Can't create this "+getEntityClass().getSimpleName());
@@ -68,8 +69,8 @@ public abstract class BaseService<E extends Serializable, D> {
         return mapper.toDto(entity);
     }
 
-    public boolean deleteById(Integer id) {
-        return repository.deleteById(id);
+    public void deleteById(Integer id) {
+        repository.deleteById(id);
     }
 
     /*public D update(Integer id, D dto) {
@@ -79,18 +80,17 @@ public abstract class BaseService<E extends Serializable, D> {
             mapper.partialUpdate(entity, dto);
             return mapper.toDto(repository.update(entity));
         } else {
-            throw new EntityNotFoundException("Can't get the entity with id: " + id);
+            throw new WebServiceException("Can't get the entity with id: " + id);
         }
     }*/
-    public boolean update(Integer id, D dto) {
+    public D update(Integer id, D dto) {
         return Database.doInTransaction(
                 entityManager -> {
                     Optional<E> optionalEntity = Optional.ofNullable(entityManager.find(getEntityClass(), id));
                     if (optionalEntity.isPresent()) {
                         E entity = optionalEntity.get();
                         mapper.partialUpdate(entity, dto);
-//                        return mapper.toDto(entityManager.merge(entity));
-                        return true;
+                        return mapper.toDto(entityManager.merge(entity));
                     } else {
                         throw new WebServiceException("Can't get "+getEntityClass().getSimpleName()+" with id: " + id);
                     }

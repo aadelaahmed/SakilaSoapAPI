@@ -18,8 +18,10 @@ import org.example.mapper.FilmMapper;
 import org.example.repository.ActorRepository;
 import org.example.repository.FilmRepository;
 import org.example.service.actor.ActorServiceImpl;
+import org.example.service.film.FilmService;
 import org.example.service.film.FilmServiceImpl;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +29,7 @@ import java.util.Optional;
 
 @WebService(name = "FilmService")
 public class FilmController {
-    private final FilmServiceImpl service = new FilmServiceImpl(
+    private final FilmService service = new FilmService(
             new FilmRepository(), FilmMapper.INSTANCE.INSTANCE
     );
 
@@ -53,7 +55,7 @@ public class FilmController {
             throw new WebServiceException("The film is already existed");
         } else {
             filmDto.setId(null);
-            Optional<FilmDto> optionalFilmDto = Optional.ofNullable(service.create(filmDto, filmDto.getId()));
+            Optional<FilmDto> optionalFilmDto = Optional.ofNullable(service.createByName(filmDto,"title", filmDto.getTitle()));
             if (optionalFilmDto.isPresent()) {
                 return optionalFilmDto.get();
             }
@@ -63,33 +65,20 @@ public class FilmController {
 
     @WebMethod(operationName = "updateFilm")
     @WebResult(name = "filmUpdated")
-    public ResponseMessage updateFilm(@WebParam(name = "id") Integer id, @WebParam(name = "film") FilmDto filmDto) {
+    public FilmDto updateFilm(@WebParam(name = "id") Integer id, @WebParam(name = "film") FilmDto filmDto) {
         filmDto.setId(id);
-        try {
-            boolean res = service.update(id, filmDto);
-            if (res) {
-                return new ResponseMessage("Film was updated successfully");
-            } else {
-                throw new WebServiceException("Failed to update film");
-            }
-        } catch (Exception e) {
-            throw new WebServiceException("Failed to update film: " + e.getMessage(), e);
-        }
-
+        filmDto.setLastUpdate(Instant.now());
+        FilmDto res = service.update(id, filmDto);
+        if (res != null) {
+            return res;
+        } else
+            throw new WebServiceException("Failed to update film");
     }
 
     @WebMethod(operationName = "deleteFilm")
     @WebResult(name = "filmDeleted")
     public ResponseMessage deleteFilm(@WebParam(name = "id") Integer id) {
-        try {
-            boolean res = service.deleteById(id);
-            if (res) {
-                return new ResponseMessage("Film with ID " + id + " deleted successfully");
-            } else {
-                throw new WebServiceException("Failed to delete film");
-            }
-        } catch (Exception e) {
-            throw new WebServiceException("Failed to delete film: " + e.getMessage(), e);
-        }
+        service.deleteById(id);
+        return new ResponseMessage("the film was deleted successfully");
     }
 }

@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import jakarta.xml.ws.WebServiceException;
 import org.example.controller.request.FilmRentalRequest;
 import org.example.dto.rental.RentalDto;
 import org.example.dto.rental.RentalSummaryDto;
@@ -31,17 +32,17 @@ public class RentalRepository extends BaseRepository<Rental, Integer> {
             Integer filmId = filmRentalRequest.getFilmId();
             Film film =entityManager.find(Film.class,filmId);
             if (film == null)
-                throw new EntityNotFoundException("Can't find film of id: " + filmId);
+                throw new WebServiceException("Can't find film of id: " + filmId);
             //then,ensures that there is Customer with this id in db.
             Integer customerId = filmRentalRequest.getCustomerId();
             Customer customer = entityManager.find(Customer.class,customerId);
             if (customer == null)
-                throw new EntityNotFoundException("Can't find customer of id: " + customerId);
+                throw new WebServiceException("Can't find customer of id: " + customerId);
             //then,ensures that there is Staff with this id in db.
             Integer staffId = filmRentalRequest.getStaffId();
             Staff staff = entityManager.find(Staff.class,staffId);
             if (staff == null)
-                throw new EntityNotFoundException("Can't find staff of id: " + staffId);
+                throw new WebServiceException("Can't find staff of id: " + staffId);
             //create inventory object to set it in the rental.
             Inventory inventory = new Inventory();
             inventory.setFilm(film);
@@ -76,7 +77,7 @@ public class RentalRepository extends BaseRepository<Rental, Integer> {
                     query.select(root);
                     List<Rental> rentals = entityManager.createQuery(query).getResultList();
                     if (rentals.isEmpty())
-                        throw new EntityNotFoundException("There are no rentals");
+                        throw new WebServiceException("There are no rentals");
                     return summaryMapper.toDto(rentals);
                 }
         );
@@ -92,7 +93,7 @@ public class RentalRepository extends BaseRepository<Rental, Integer> {
                             .where(builder.equal(root.get("id"), rentalId)); // Add predicate to filter by rentalId
                     List<Rental> rentals = entityManager.createQuery(query).getResultList();
                     if (rentals.isEmpty()) {
-                        throw new EntityNotFoundException("There are no rentals with id: " + rentalId);
+                        throw new WebServiceException("There are no rentals with id: " + rentalId);
                     }
                     return summaryMapper.toDto(rentals.get(0));
                 }

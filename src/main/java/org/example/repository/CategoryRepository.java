@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import jakarta.xml.ws.WebServiceException;
 import org.example.model.Category;
 import org.example.model.Film;
 import org.example.model.FilmCategory;
@@ -20,17 +21,17 @@ public class CategoryRepository extends BaseRepository<Category,Integer> {
                 entityManager -> {
                     Category category = entityManager.find(Category.class, categoryId);
                     if (category == null) {
-                        throw new EntityNotFoundException("There is no category with this id");
+                        throw new WebServiceException("There is no category with this id");
                     }
                     Film film = entityManager.find(Film.class,filmId);
                     if (film == null)
-                        throw new EntityNotFoundException("There is no film with this id");
+                        throw new WebServiceException("There is no film with this id");
                     // Check if the film is already added to the category
                     boolean isFilmAlreadyInCategory = category.getFilmCategories().stream()
                             .anyMatch(filmCategory -> filmCategory.getFilm().getId().equals(filmId));
                     if (isFilmAlreadyInCategory) {
                         System.out.println("The film is already added to the category");
-                        throw new EntityNotFoundException("The film is already added to this category");
+                        throw new WebServiceException("The film is already added to this category");
                     }
                     System.out.println("Start add the film to category");
                     FilmCategory filmCategory = new FilmCategory();

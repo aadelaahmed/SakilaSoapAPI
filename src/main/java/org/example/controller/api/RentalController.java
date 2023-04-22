@@ -5,10 +5,12 @@ import jakarta.jws.WebParam;
 import jakarta.jws.WebResult;
 import jakarta.jws.WebService;
 import jakarta.jws.soap.SOAPBinding;
+import jakarta.xml.ws.WebServiceException;
 import org.example.controller.request.FilmRentalRequest;
 import org.example.dto.rental.RentalSummaryDto;
 import org.example.mapper.rental.RentalMapper;
 import org.example.repository.RentalRepository;
+import org.example.service.rental.RentalService;
 import org.example.service.rental.RentalServiceImpl;
 
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.Optional;
 @WebService(name = "RentalService")
 public class RentalController {
 
-    private final RentalServiceImpl service = new RentalServiceImpl(
+    private final RentalService service = new RentalService(
             new RentalRepository(), RentalMapper.INSTANCE
     );
 
@@ -29,7 +31,7 @@ public class RentalController {
         if (rentalSummaryDto != null){
             return rentalSummaryDto;
         }
-        throw new RuntimeException("Can't create this rental object");
+        throw new WebServiceException("Can't create this rental object");
     }
 
     @WebMethod(operationName = "getAllRentals")
@@ -44,7 +46,7 @@ public class RentalController {
     public RentalSummaryDto getRentalById(@WebParam(name = "id") Integer id) {
         RentalSummaryDto summary = service.getRentalSummaryById(id);
         if (summary == null) {
-            throw new RuntimeException("Rental with id " + id + " not found");
+            throw new WebServiceException("Rental with id " + id + " not found");
         }
         return summary;
     }

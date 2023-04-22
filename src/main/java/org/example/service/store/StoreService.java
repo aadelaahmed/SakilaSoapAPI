@@ -1,8 +1,9 @@
-package org.example.service;
+package org.example.service.store;
 
 import jakarta.xml.ws.WebServiceException;
 import org.example.dto.ActorDto;
 import org.example.dto.customer.CustomerSummaryDto;
+import org.example.dto.staff.StaffSummaryDto;
 import org.example.dto.store.StoreDto;
 import org.example.dto.store.StoreSummaryDto;
 import org.example.mapper.ActorMapper;
@@ -11,6 +12,7 @@ import org.example.model.Actor;
 import org.example.model.Store;
 import org.example.repository.ActorRepository;
 import org.example.repository.StoreRepository;
+import org.example.service.BaseService;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
@@ -24,9 +26,7 @@ public class StoreService extends BaseService<Store, StoreDto> {
         this.storeRepository = storeRepository;
         this.storeMapper = storeMapper;
     }
-    public StoreDto createStore(StoreSummaryDto storeSummaryDto) {
-        return storeRepository.createStore(storeSummaryDto);
-    }
+
     @Override
     protected Class<Store> getEntityClass() {
         return Store.class;
@@ -51,5 +51,17 @@ public class StoreService extends BaseService<Store, StoreDto> {
             throw new WebServiceException("Can't find store with id: "+storeId);
         List<CustomerSummaryDto> customers = storeRepository.getAllCustomersByStoreId(storeId);
         return customers;
+    }
+
+    public StoreDto createStore(StoreSummaryDto storeSummaryDto) {
+        return storeRepository.createStore(storeSummaryDto);
+    }
+
+    public List<StaffSummaryDto> getAllStaffsByStoreId(Integer storeId) {
+        boolean isStoreExist = storeRepository.isExist(storeId);
+        if (!isStoreExist)
+            throw new WebServiceException("Can't find store with id: "+storeId);
+        List<StaffSummaryDto> staffs = storeRepository.getAllStaffsByStoreId(storeId);
+        return staffs;
     }
 }
