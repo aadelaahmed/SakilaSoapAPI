@@ -22,7 +22,6 @@ import java.util.Optional;
 
 
 
-@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
 @WebService(name = "actors")
 public class ActorController {
     //TODO -> USE IOC spring container HERE
